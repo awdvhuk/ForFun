@@ -86,6 +86,8 @@ class Game_2048 extends Component {
 
   click = (e) => {
     e.persist()
+    if (!this.state.start) { return; }
+    if (e.key === 'Backspace') { this.prevStep(); return; }
     if (
       e.key !== 'ArrowUp' &&
       e.key !== 'ArrowRight' &&
@@ -135,6 +137,7 @@ class Game_2048 extends Component {
     this.setState({
       values: copy(history[history.length - 1]),
       history,
+      fail: false,
       score
     });
     setHist(history);
@@ -217,7 +220,8 @@ const StyledGameBox = styled.div`
   height: 300px;
   background: #afafaf;
   border: 2px solid #9c9c9c;
-  border-radius: 5px;
+  border-top: none;
+  border-radius: 0 0 5px 5px;
   position: relative;
   margin: 0 auto;
   display: flex;
@@ -239,7 +243,7 @@ const StyledGameBox = styled.div`
     left: -2px;
     width: 300px;
     height: 300px;
-    border-radius: 5px;
+    border-radius: 0 0 5px 5px;
     background: #797979bf;
     display: flex;
     align-items: center;

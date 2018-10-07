@@ -50,9 +50,13 @@ class ControlPanel extends Component {
 
 const StyledContainer = styled.div`
   width: 300px;
-  margin: 0 auto 10px auto;
+  margin: 0 auto 0 auto;
+  padding: 5px 5px 5px 8px;
   display: flex;
   justify-content: space-between;
+  background: #dedede;
+  border: 2px solid #9c9c9c;
+  border-radius: 5px 5px 0 0;
 
   & .statistic,
   & .buttons {
@@ -60,17 +64,23 @@ const StyledContainer = styled.div`
   }
 
   & .statistic {
-    width: 150px;
+    /* width: 150px; */
     justify-content: space-between;
 
+    .score {
+      margin-right: 6px;
+      /* border-right: 1px solid #9c9c9c; */
+    }
+
     div {
-      width: 72px;
-      background: grey;
+      width: 82px;
+      border-right: 1px solid #9c9c9c;
+      /* background: grey; */
     }
   }
 
   & .btn-danger { 
-    margin-left: 10px;
+    margin-left: 5px;
   }
 `;
 

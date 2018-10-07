@@ -6,42 +6,60 @@ export const getColor = (value) => {
   let background = 'white';
   let color = 'black';
   let borderColor = 'grey';
+  if (value > 4) { color = 'white'; }
 
   switch (value) {
     case null:
       background = '#dedede';
-      borderColor = '#c1c1c1';
+      borderColor = '#c7c7c7';
       break;
 
     case 2:
-      background = '#fffae0';
-      borderColor = '#d4ca95';
+      color = 'black';
+      background = '#fff6ef';
+      borderColor = '#e0d7d0';
       break;
 
     case 4:
+      background = '#ffeed2';
+      borderColor = '#e2d3bb';
+      break;
+
     case 8:
-      background = '#ffef92';
+      background = '#f4a973';
+      borderColor = '#e49c69';
       break;
 
     case 16:
+      background = '#f98c5e';
+      borderColor = '#ec8356';
+      break;
+
     case 32:
+      background = '#fa7559';
+      borderColor = '#ec7032';
       break;
 
     case 64:
-    case 128:
+      background = '#fc5638';
+      borderColor = '#e04c31';
       break;
 
+    case 128:
     case 256:
     case 512:
+    case 1024:
+      background = '#eec76f';
+      borderColor = '#e0bc6a';
       break;
 
-    case 1024:
     case 2048:
+      background = '#eeb02d';
+      borderColor = '#d49c27';
       break;
 
     default:
       background = 'black';
-      color = 'white';
       break;
   }
 
