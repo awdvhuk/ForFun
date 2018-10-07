@@ -1,34 +1,55 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { defaultValues, move, failCheck, random } from '../../components/2048/utils_2048';
+import {
+  defaultValues,
+  getHist,
+  setHist,
+  getScore,
+  setScore,
+  move,
+  copy,
+  failCheck,
+  random
+} from '../../components/2048/utils_2048';
 import { Button } from 'react-bootstrap';
 import Item from '../../components/2048/Item';
+import ControlPanel from '../../components/2048/ControlPanel';
 
 class Game_2048 extends Component {
   constructor(props) {
     super(props);
+    const { score, record } = getScore();
+
     this.state = {
       values: defaultValues(),
+      history: getHist(),
       start: false,
       fail: false,
-      wait: false
+      wait: false,
+      score,
+      record
     };
   }
 
   componentDidMount() {
     this.hiddenInput.focus();
+    const { history } = this.state;
+    if (history[0]) {
+      this.setState({
+        values: copy(history[history.length - 1])
+      });
+    }
   }
 
   start = () => {
-    this.addNewValue();
     this.setState({
       start: true
     });
+    if (this.state.history[0]) { return; }
+    this.addNewValue();
   }
 
-  addNewValue = () => {
-    const { values } = this.state;
-
+  addNewValue = (values = this.state.values, history = this.state.history) => {
     let index, randomY, randomX;
     while (true) {
       randomY = random(0, 4);
@@ -46,17 +67,20 @@ class Game_2048 extends Component {
       value = 4;
     }
 
+    if (!history.length) { history.push(copy(values)); }
     values[randomX][index] = value;
 
     if (failCheck(values)) {
       this.setState({
-        fail: true,
-        values: [...values]
+        fail: true
       });
-      return;
     }
+
+    history.push(copy(values));
+    setHist(history);
     this.setState({
-      values: [...values]
+      values: copy(values),
+      history: history
     });
   }
 
@@ -68,30 +92,72 @@ class Game_2048 extends Component {
       e.key !== 'ArrowDown' &&
       e.key !== 'ArrowLeft'
     ) { return; }
-    const { values } = this.state;
-    const newValues = move(values, e.key);
+    let { values, score, record } = this.state;
+    let { values: newValues, score: newScore } = move(values, e.key);
+    newScore += score[score.length - 1];
+    score.push(newScore);
+    record = newScore > record ? newScore : record;
 
     this.setState({
-      values: [...newValues]
+      values: copy(newValues),
+      score,
+      record
     });
 
+    setScore(score, record);
+
     if (newValues !== values) {
-      this.addNewValue();
+      this.addNewValue(newValues.slice());
     }
   }
 
-  preventBlur = (e) => {
-    e.target.focus();
+  restart = () => {
+    const values = defaultValues();
+    this.setState({
+      values: copy(values),
+      history: [],
+      score: [0],
+      start: true,
+      fail: false
+    });
+    this.addNewValue(values, []);
+    setHist([]);
+    setScore([0]);
   }
+
+  prevStep = () => {
+    let { history, score } = this.state;
+    if (history.length < 2 || score.length < 2) { return; }
+
+    history.pop();
+    score.pop();
+
+    this.setState({
+      values: copy(history[history.length - 1]),
+      history,
+      score
+    });
+    setHist(history);
+    setScore(score);
+  }
+
+  preventBlur = (e) => { e.target.focus(); }
 
   createRef = (element) => { this.hiddenInput = element }
 
   render() {
-    const { values, fail, start } = this.state;
+    const { values, fail, start, history, score, record } = this.state;
 
     return (
       <React.Fragment>
         <h1 className="pageTitle">Here 2048 game</h1>
+
+        <ControlPanel
+          restart={this.restart}
+          prevStep={this.prevStep}
+          score={score[score.length - 1]}
+          record={record}
+        />
 
         <StyledGameBox>
           <input
@@ -101,12 +167,12 @@ class Game_2048 extends Component {
             onKeyUp={this.click}
             tabIndex="0"
             autoFocus
-            value=""
+            readOnly
             max={0}
           />
-          {/* ref={this.createRef} */}
-          {/* !start && */}
+
           {
+            !start &&
             (
               <div
                 className="start"
@@ -117,8 +183,8 @@ class Game_2048 extends Component {
                   bsStyle="success"
                   bsSize="large"
                 >
-                  Start
-            </Button>
+                  {!history[0] ? 'Start' : 'Continue'}
+                </Button>
               </div>
             )
           }
@@ -138,14 +204,8 @@ class Game_2048 extends Component {
               );
             })
           }
-          {
-            fail &&
-            <div
-              className="fail"
-            >
-              <span>Wasted</span>
-            </div>
-          }
+
+          {fail && <div className="fail"><span>Wasted</span></div>}
         </StyledGameBox>
       </React.Fragment>
     );
@@ -184,6 +244,12 @@ const StyledGameBox = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    
+    button {
+      width: 70%;
+      height: 25%;
+      font-size: 40px;
+    }
   }
 
   & .fail span {

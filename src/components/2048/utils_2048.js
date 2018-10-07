@@ -1,3 +1,7 @@
+const isNumeric = (n) => {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+};
+
 export const getColor = (value) => {
   let background = 'white';
   let color = 'black';
@@ -54,6 +58,7 @@ export const defaultValues = () => {
 
 export const move = (arr, key) => {
   let changes = false;
+  let score = 0;
   switch (key) {
     case 'ArrowUp':
       for (let x = 0; x < 4; x++) {
@@ -62,16 +67,19 @@ export const move = (arr, key) => {
           if (arr[x][y] === arr[x][y + 1]) {
             changes = true;
             arr[x][y] *= 2;
+            score += arr[x][y];
             arr[x][y + 1] = null;
           }
           else if (!arr[x][y + 1] && arr[x][y + 2] && arr[x][y] === arr[x][y + 2]) {
             changes = true;
             arr[x][y] *= 2;
+            score += arr[x][y];
             arr[x][y + 2] = null;
           }
           else if (!arr[x][y + 2] && arr[x][y + 3] && arr[x][y] === arr[x][y + 3]) {
             changes = true;
             arr[x][y] *= 2;
+            score += arr[x][y];
             arr[x][y + 3] = null;
           }
         }
@@ -105,16 +113,19 @@ export const move = (arr, key) => {
           if (arr[x][y] === arr[x - 1][y]) {
             changes = true;
             arr[x][y] *= 2;
+            score += arr[x][y];
             arr[x - 1][y] = null;
           }
           else if (arr[x - 2] && !arr[x - 1][y] && arr[x - 2][y] && arr[x][y] === arr[x - 2][y]) {
             changes = true;
             arr[x][y] *= 2;
+            score += arr[x][y];
             arr[x - 2][y] = null;
           }
           else if (arr[x - 3] && !arr[x - 2][y] && arr[x - 3][y] && arr[x][y] === arr[x - 3][y]) {
             changes = true;
             arr[x][y] *= 2;
+            score += arr[x][y];
             arr[x - 3][y] = null;
           }
         }
@@ -148,16 +159,19 @@ export const move = (arr, key) => {
           if (arr[x][y] === arr[x][y - 1]) {
             changes = true;
             arr[x][y] *= 2;
+            score += arr[x][y];
             arr[x][y - 1] = null;
           }
           else if (!arr[x][y - 1] && arr[x][y - 2] && arr[x][y] === arr[x][y - 2]) {
             changes = true;
             arr[x][y] *= 2;
+            score += arr[x][y];
             arr[x][y - 2] = null;
           }
           else if (!arr[x][y - 2] && arr[x][y - 3] && arr[x][y] === arr[x][y - 3]) {
             changes = true;
             arr[x][y] *= 2;
+            score += arr[x][y];
             arr[x][y - 3] = null;
           }
         }
@@ -191,16 +205,19 @@ export const move = (arr, key) => {
           if (arr[x][y] === arr[x + 1][y]) {
             changes = true;
             arr[x][y] *= 2;
+            score += arr[x][y];
             arr[x + 1][y] = null;
           }
           else if (arr[x + 2] && !arr[x + 1][y] && arr[x + 2][y] && arr[x][y] === arr[x + 2][y]) {
             changes = true;
             arr[x][y] *= 2;
+            score += arr[x][y];
             arr[x + 2][y] = null;
           }
           else if (arr[x + 3] && !arr[x + 2][y] && arr[x + 3][y] && arr[x][y] === arr[x + 3][y]) {
             changes = true;
             arr[x][y] *= 2;
+            score += arr[x][y];
             arr[x + 3][y] = null;
           }
         }
@@ -228,10 +245,10 @@ export const move = (arr, key) => {
       break;
 
     default:
-      return arr;
+      return { values: arr, score };
   }
-  if (changes) { return [...arr]; }
-  return arr;
+  if (changes) { arr = arr.slice(); }
+  return { values: arr, score };
 };
 
 export const failCheck = (arr) => {
@@ -247,6 +264,58 @@ export const failCheck = (arr) => {
     }
   }
   return true;
+}
+
+export const getHist = () => {
+  let history = JSON.parse(localStorage.getItem("awdvhuk_site-games/2048-history"));
+  if (
+    !history ||
+    !Array.isArray(history) ||
+    !Array.isArray(history[0]) ||
+    !Array.isArray(history[0][0])
+  ) { return []; }
+
+  return history;
+}
+
+export const setHist = (history) => {
+  localStorage.setItem("awdvhuk_site-games/2048-history", JSON.stringify(history));
+}
+
+export const getScore = () => {
+  let score = JSON.parse(localStorage.getItem("awdvhuk_site-games/2048-score"));
+  let record = JSON.parse(localStorage.getItem("awdvhuk_site-games/2048-record"));
+  if (!score || !Array.isArray(score)) {
+    score = [0];
+    localStorage.setItem("awdvhuk_site-games/2048-score", JSON.stringify(score));
+  }
+  if (!record || !isNumeric(record)) {
+    record = 0;
+    localStorage.setItem("awdvhuk_site-games/2048-record", JSON.stringify(record));
+  }
+  return {
+    score,
+    record
+  };
+}
+
+export const setScore = (score, record) => {
+  if (score) {
+    localStorage.setItem("awdvhuk_site-games/2048-score", JSON.stringify(score));
+  }
+  if (record) {
+    localStorage.setItem("awdvhuk_site-games/2048-record", JSON.stringify(record));
+  }
+}
+
+export const copy = (arr) => {
+  if (!arr || !arr.length) { return arr; }
+  return [
+    arr[0].slice(),
+    arr[1].slice(),
+    arr[2].slice(),
+    arr[3].slice()
+  ];
 }
 
 export const random = (min, max) => {
