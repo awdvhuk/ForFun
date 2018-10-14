@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import Header from './components/Header';
 import Home from './routes/Home';
 import Games from './routes/Games';
+import Utils from './routes/Utils';
 
 class App extends Component {
   render() {
@@ -23,6 +24,11 @@ class App extends Component {
               <Route
                 path="/games"
                 component={Games}
+              />
+
+              <Route
+                path="/utils"
+                component={Utils}
               />
 
               <Route

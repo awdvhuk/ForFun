@@ -144,6 +144,11 @@ class Game_2048 extends Component {
     setScore(score);
   }
 
+  touch = (first) => {
+    console.log(first);
+
+  }
+
   preventBlur = (e) => { e.target.focus(); }
 
   createRef = (element) => { this.hiddenInput = element }
@@ -162,7 +167,9 @@ class Game_2048 extends Component {
           record={record}
         />
 
-        <StyledGameBox>
+        <StyledGameBox
+          onTouchMove={this.touch}
+        >
           <input
             onBlur={this.preventBlur}
             className="hiddenInput"

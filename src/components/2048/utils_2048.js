@@ -94,7 +94,7 @@ export const move = (arr, key) => {
             score += arr[x][y];
             arr[x][y + 2] = null;
           }
-          else if (!arr[x][y + 2] && arr[x][y + 3] && arr[x][y] === arr[x][y + 3]) {
+          else if (!!arr[x][y + 1] && !arr[x][y + 2] && arr[x][y + 3] && arr[x][y] === arr[x][y + 3]) {
             changes = true;
             arr[x][y] *= 2;
             score += arr[x][y];
@@ -127,8 +127,14 @@ export const move = (arr, key) => {
     case 'ArrowRight':
       for (let x = 3; x > 0; x--) {
         for (let y = 0; y < 4; y++) {
+
+          // console.log(x);
+          // console.log(arr[2][y], arr[1][y]);
+
           if (!arr[x][y] || !arr[x - 1] || arr[x - 1][y] === undefined) { continue; }
+          debugger;
           if (arr[x][y] === arr[x - 1][y]) {
+
             changes = true;
             arr[x][y] *= 2;
             score += arr[x][y];
@@ -140,7 +146,7 @@ export const move = (arr, key) => {
             score += arr[x][y];
             arr[x - 2][y] = null;
           }
-          else if (arr[x - 3] && !arr[x - 2][y] && arr[x - 3][y] && arr[x][y] === arr[x - 3][y]) {
+          else if (arr[x - 3] && !arr[x - 1][y] && !arr[x - 2][y] && arr[x - 3][y] && arr[x][y] === arr[x - 3][y]) {
             changes = true;
             arr[x][y] *= 2;
             score += arr[x][y];
@@ -186,7 +192,7 @@ export const move = (arr, key) => {
             score += arr[x][y];
             arr[x][y - 2] = null;
           }
-          else if (!arr[x][y - 2] && arr[x][y - 3] && arr[x][y] === arr[x][y - 3]) {
+          else if (!arr[x][y - 1] && !arr[x][y - 2] && arr[x][y - 3] && arr[x][y] === arr[x][y - 3]) {
             changes = true;
             arr[x][y] *= 2;
             score += arr[x][y];
@@ -232,7 +238,7 @@ export const move = (arr, key) => {
             score += arr[x][y];
             arr[x + 2][y] = null;
           }
-          else if (arr[x + 3] && !arr[x + 2][y] && arr[x + 3][y] && arr[x][y] === arr[x + 3][y]) {
+          else if (arr[x + 3] && !arr[x + 1][y] && !arr[x + 2][y] && arr[x + 3][y] && arr[x][y] === arr[x + 3][y]) {
             changes = true;
             arr[x][y] *= 2;
             score += arr[x][y];

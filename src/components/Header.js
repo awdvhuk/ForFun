@@ -18,6 +18,14 @@ class Header extends Component {
           <Nav pullRight>
             <LinkContainer to="/some_href"><NavItem>Some words</NavItem></LinkContainer>
 
+            <NavDropdown title='Utils' id="games-list">
+              <LinkContainer to={`/utils/metronome`}><MenuItem>Metronome</MenuItem></LinkContainer>
+
+              {/* <MenuItem divider /> */}
+
+              {/* <MenuItem></MenuItem> */}
+            </NavDropdown>
+
             <NavDropdown title='Games' id="games-list">
               <LinkContainer to={`/games/2048`}><MenuItem>2048</MenuItem></LinkContainer>
 

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "prop-types": "^15.6.2",
+    "rc-slider": "^8.6.3",
     "react": "^16.5.2",
     "react-bootstrap": "^0.32.4",
     "react-dom": "^16.5.2",
